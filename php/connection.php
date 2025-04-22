@@ -1,4 +1,4 @@
-<?
+<?php
 $servername = "127.0.0.1";
 $username = "root";
 $password = "";
@@ -9,7 +9,8 @@ if ($conn->connect_error) {
     die(json_encode(["error" => "Connection failed."]));
 }
 
-// Check if the connection is successful
-echo "Connected successfully!";
-
+// echo "{
+//     \"status\": \"success\",
+//     \"message\": \"Connected to the database.\"
+// }";
 ?>

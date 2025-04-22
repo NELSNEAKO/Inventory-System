@@ -1,0 +1,39 @@
+-- Create the database
+CREATE DATABASE IF NOT EXISTS inventory;
+USE inventory;
+
+-- Create the users table
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,         -- Unique user ID
+    name VARCHAR(100) NOT NULL,                -- User's full name
+    email VARCHAR(255) NOT NULL UNIQUE,        -- User email
+    password VARCHAR(255) NOT NULL,            -- User password (hashed)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+INSERT INTO users (name, email, password)
+VALUES ('Admin', 'admin@gmail.com', 'admin');
+
+
+
+-- Create the sale table
+CREATE TABLE IF NOT EXISTS sale (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    item VARCHAR(255) NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    qty INT NOT NULL
+);
+
+INSERT INTO sale (item, date, time, price, qty) VALUES
+('Milk Tea',     CURDATE(), '10:00:00', 45.00, 10),
+('Milk Tea',     CURDATE(), '11:00:00', 45.00, 5),
+('Coffee',       CURDATE(), '12:00:00', 50.00, 8),
+('Fries',        CURDATE(), '14:00:00', 30.00, 12),
+('Hotdog',       CURDATE(), '16:00:00', 25.00, 6),
+('Coffee',       DATE_SUB(CURDATE(), INTERVAL 1 DAY), '10:00:00', 50.00, 6),
+('Fries',        DATE_SUB(CURDATE(), INTERVAL 1 DAY), '14:00:00', 30.00, 10),
+('Milk Tea',     DATE_SUB(CURDATE(), INTERVAL 2 DAY), '09:00:00', 45.00, 4),
+('Hotdog',       DATE_SUB(CURDATE(), INTERVAL 3 DAY), '13:00:00', 25.00, 7),
+('Fries',        DATE_SUB(CURDATE(), INTERVAL 6 DAY), '15:00:00', 30.00, 9);
