@@ -1,28 +1,38 @@
 <?php
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$database = "inventory";
+// Database configuration
+$host = '127.0.0.1'; // Database host
+$username = 'root';   // Database username
+$password = '';       // Database password
+$database = 'inventory'; // Database name
 
-$conn = new mysqli($servername, $username, $password, $database);
+// Create a connection to the database
+$conn = new mysqli($host, $username, $password, $database);
 
-// Check connection
+// Check if the connection was successful
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get the POST data
-$name = $_POST['name'];
-$quantity = $_POST['quantity'];
-$image = $_POST['image'];
+// Query to fetch inventory items
+$sql = "SELECT * FROM inventory";
+$result = $conn->query($sql);
 
-// Prepare and execute the insert query
-$sql = "INSERT INTO inventory (name, quantity, image) VALUES ('$name', $quantity, '$image')";
-if ($conn->query($sql) === TRUE) {
-    echo "New item added successfully";
+// Check if there are any results
+if ($result->num_rows > 0) {
+    // Create an array to store the items
+    $items = [];
+    
+    // Fetch the data and add it to the items array
+    while ($row = $result->fetch_assoc()) {
+        $items[] = $row;
+    }
+    
+    // Output the items as a JSON response
+    echo json_encode($items);
 } else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
+    echo json_encode([]); // Return an empty array if no items are found
 }
 
+// Close the database connection
 $conn->close();
 ?>

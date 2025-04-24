@@ -12,7 +12,6 @@
 
 <div class="tab-content active" id="inventory">
 
-  <!-- Top Header -->
   <div class="header-bar">
     <div class="header-left">
       <div class="header-title">AnalyticsBot</div>
@@ -36,37 +35,39 @@
   <!-- Inventory Section -->
   <div class="inventory-container">
     <button class="add-btn" onclick="showAddItemForm()">+ Add Item</button>
-    <div class="inventory-items" id="inventoryItems">
-      <!-- Example Items will go here -->
-    </div>
+    <table class="inventory-table">
+      <thead>
+        <tr>
+          <th class="product-col">Product</th>
+          <th class="quantity-col">Inventory</th>
+        </tr>
+      </thead>
+      <tbody id="inventoryTableBody">
+        <!-- Inventory items will be dynamically inserted here -->
+      </tbody>
+    </table>
   </div>
 
   <!-- Add Item Modal -->
   <div class="add-item-form" id="addItemForm">
     <form id="addItem" method="POST" action="upload.php" enctype="multipart/form-data">
-    <label for="name">Item Name:</label>
-    <input type="text" name="name" required>
+      <label for="name">Item Name:</label>
+      <input type="text" name="name" required>
 
-    <label for="quantity">Quantity:</label>
-    <input type="number" name="quantity" required>
+      <label for="quantity">Quantity:</label>
+      <input type="number" name="quantity" required>
 
-    <label for="image">Upload Image:</label>
-    <input type="file" name="image" accept="image/*" required>
+      <label for="image">Upload Image:</label>
+      <input type="file" name="image" accept="image/*" required>
 
-    <button type="submit">Add Item</button>
+      <button type="submit">Add Item</button>
     </form>
   </div>
 
 </div>
 
-<script>
-  function showAddItemForm() {
-    document.getElementById('addItemForm').style.display = 'flex';
-  }
-
-  function hideAddItemForm() {
-    document.getElementById('addItemForm').style.display = 'none';
-  }
+<script src="../script.js">
+  console.log("✅ inventory.php loaded into DOM");
 </script>
 
 </body>

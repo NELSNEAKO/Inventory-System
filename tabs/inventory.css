@@ -1,102 +1,163 @@
 /* Basic Layout */
-
 .inventory-container {
-    padding: 20px;
+  padding: 20px;
 }
 
 #addItem label {
-    font-weight: 500;
-    color: #333;
-  }
-  
-  .add-btn {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: background-color 0.3s ease;
-  }
-  
-  .add-btn:hover {
-    background-color: #0056b3;
-  }
-  
-  .inventory-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-top: 30px;
-  }
-  
-  .item-card {
-    background-color: #fff;
-    width: 220px;
-    padding: 15px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease;
-  }
-  
-  .item-card:hover {
-    transform: translateY(-5px);
-  }
-  
-  .item-card img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
-  
-  .add-item-form {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .add-item-form form {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 450px;
-  }
-  
-  .add-item-form input {
-    width: 100%;
-    padding: 10px;
-    margin: 12px 0;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-  }
-  
-  .add-item-form button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
-  .add-item-form button[type="submit"] {
-    background-color: #28a745;
-    color: white;
-    margin-right: 10px;
-  }
-  
-  .add-item-form button[type="button"] {
-    background-color: #dc3545;
-    color: white;
-  }
+  font-weight: 500;
+  color: #333;
+}
+
+.add-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #0056b3;
+}
+
+.inventory-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.add-item-form {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.add-item-form form {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 450px;
+}
+
+.add-item-form input {
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.add-item-form button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-item-form button[type="submit"] {
+  background-color: #28a745;
+  color: white;
+  margin-right: 10px;
+}
+
+.add-item-form button[type="button"] {
+  background-color: #dc3545;
+  color: white;
+}
+
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: white;
+}
+
+.inventory-table thead {
+  background-color: #f9f9f9;
+  text-align: left;
+}
+
+.inventory-table th {
+  padding: 16px;
+  font-weight: 600;
+  font-size: 14px;
+  color: black;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.inventory-row td {
+  padding: 16px;
+  border-bottom: 1px solid #f1f1f1;
+  vertical-align: middle;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.product-img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name {
+  font-weight: 600;
+  font-size: 15px;
+  color: #222;
+}
+
+.product-tag {
+  font-size: 13px;
+  color: #999;
+  background-color: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-block;
+  width: fit-content;
+  margin-top: 4px;
+}
+
+.quantity-col .stock {
+  font-weight: 600;
+  color: #222;
+}
+
+/* Ensure column width */
+.product-col {
+  width: 60%; /* Adjust width as necessary */
+}
+
+.quantity-col {
+  width: 40%; /* Adjust width as necessary */
+}
+
+tbody {
+  overflow-y: auto;
+  max-height: 500px;
+}
+
+th {
+  color: black;
+}

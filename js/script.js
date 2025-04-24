@@ -29,7 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
           break;
 
         case "inventory":
-          loadScript("js/inventory.js");
+          loadScript("js/inventory.js", () => {
+            // Call fetchInventoryItems when inventory tab is loaded
+            fetchInventoryItems();
+          });
           break;
 
         case "users":

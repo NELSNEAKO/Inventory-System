@@ -3,7 +3,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $name = $_POST['name'];
     $qty = $_POST['quantity'];
 
-    $targetDir = "uploads/";
+    $targetDir = "../uploads/";
     $fileName = basename($_FILES["image"]["name"]);
     $targetFilePath = $targetDir . $fileName;
 

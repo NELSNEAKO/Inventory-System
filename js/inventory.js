@@ -1,10 +1,13 @@
 // Fetch inventory items when the page loads
 function fetchInventoryItems() {
+    console.log("✅ loaded");
+
     $.ajax({
         url: 'php/inventory.php',
         method: 'GET',
         dataType: 'json',
         success: function(data) {
+            console.log("Fetched Data:", data);  // Check data in console
             displayInventoryItems(data);
         },
         error: function(error) {
@@ -16,20 +19,31 @@ function fetchInventoryItems() {
 
 // Display fetched inventory items in the page
 function displayInventoryItems(items) {
-    const inventoryContainer = $('#inventoryItems');
-    inventoryContainer.empty(); // Clear the container before adding items
+    const tableBody = $('#inventoryTableBody');  // Get the table body element
+    tableBody.empty();  // Clear any existing content in the table body
 
     items.forEach(item => {
-        const itemCard = `
-            <div class="item-card">
-                <img src="${item.image}" alt="${item.name}">
-                <h3>${item.name}</h3>
-                <p>Quantity: ${item.quantity}</p>
-            </div>
+        const row = `
+            <tr class="inventory-row">
+                <td class="product-col">
+                    <div class="product-info">
+                        <img src="${item.image}" alt="${item.name}" class="product-img" />
+                        <div class="product-details">
+                            <span class="product-name">${item.name}</span>
+                            <span class="product-tag">Product</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="quantity-col">
+                    <span class="stock">${item.quantity}</span> Stock
+                </td>
+            </tr>
         `;
-        inventoryContainer.append(itemCard);
+        tableBody.append(row);  // Add the new row to the table body
     });
 }
+
+
 
 // Show the form to add a new item
 function showAddItemForm() {
