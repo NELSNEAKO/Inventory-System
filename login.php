@@ -16,8 +16,8 @@ if (isset($_SESSION['user_id'])) {
 </head>
 <body>
   <div class="auth-container">
-    <form action="authenticate.php" method="POST" class="auth-form">
-      <h2>Login to Inventory System</h2>
+    <form action="php/authenticate.php" method="POST" class="auth-form">
+      <h2>Login</h2>
       <?php if (isset($_GET['error'])): ?>
         <p class="error"><?php echo htmlspecialchars($_GET['error']); ?></p>
       <?php endif; ?>

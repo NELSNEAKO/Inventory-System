@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('php/connection.php');
+include('connection.php');
 
 if ($conn->connect_error) {
     die("Connection failed.");
@@ -19,8 +19,9 @@ $user = $result->fetch_assoc();
 if ($user && password_verify($password, $user['password'])) {
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['user_name'] = $user['name'];
-    header("Location: index.php");
+    header("Location: ../index.php");
+    echo __DIR__;
 } else {
-    header("Location: login.php?error=Invalid credentials");
+    header("Location: ../login.php?error=Invalid credentials");
 }
 ?>

@@ -1,11 +1,11 @@
 <?php
 session_start();
-if (!isset($_SESSION['user'])) {
-    header("Location: login.php");
+
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php"); // adjust path if login.php is in /php/
     exit();
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,12 +47,17 @@ if (!isset($_SESSION['user'])) {
           </li>
           <li class="tab-btn" data-tab="settings">
             <i class="fas fa-cogs"></i> Settings</li>
-          <li class="logout"><i class="fas fa-sign-out-alt"></i> Logout</li>
+          <li class="logout" onClick= "window.location.href='php/logout.php'">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </li>
         </ul>
       </nav>
 
       <main class="content">
-        <div id="tab-content-container"></div>
+        
+        <div id="tab-content-container">
+          
+        </div>
       </main>
     </div>
     <script src="js/script.js"></script>

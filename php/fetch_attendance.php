@@ -1,5 +1,5 @@
 <?php
-include('gualizaConnect.php');
+include('connection.php');
 
 
 $data = [];
