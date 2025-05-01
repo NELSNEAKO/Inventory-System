@@ -36,15 +36,15 @@ if (!isset($_SESSION['user_id'])) {
           <li class="tab-btn active" data-tab="dashboard">
             <i class="fas fa-tachometer-alt"></i> Dashboard
           </li>
-          <li class="tab-btn" data-tab="analytics">
+          <!-- <li class="tab-btn" data-tab="analytics">
             <i class="fas fa-chart-line"></i> Analytics
-          </li>
+          </li> -->
           <li class="tab-btn" data-tab="inventory">
             <i class="fas fa-boxes"></i> Inventory
           </li>
-          <li class="tab-btn" data-tab="users">
+          <!-- <li class="tab-btn" data-tab="users">
             <i class="fas fa-user-friends"></i> Users
-          </li>
+          </li> -->
           <li class="tab-btn" data-tab="settings">
             <i class="fas fa-cogs"></i> Settings</li>
           <li class="logout" onClick= "window.location.href='php/logout.php'">

@@ -5,7 +5,7 @@ function fetchInventoryItems() {
     $.ajax({
         url: 'php/inventory.php',
         method: 'GET',
-        dataType: 'json',
+        dataType: 'json',   
         success: function(data) {
             console.log("Fetched Data:", data);  // Check data in console
             displayInventoryItems(data);
@@ -55,12 +55,15 @@ function hideAddItemForm() {
     $('#addItemForm').hide();
 }
 
-// Handle form submission with image upload
 document.getElementById('addItem').addEventListener('submit', function (e) {
-    e.preventDefault();
+    e.preventDefault();  // Prevent default form submission
 
     const form = document.getElementById('addItem');
     const formData = new FormData(form);
+    const submitButton = form.querySelector('button[type="submit"]');
+    
+    // Disable the submit button to prevent multiple submissions
+    submitButton.disabled = true;
 
     $.ajax({
         url: 'php/upload.php', // your PHP handler
@@ -74,10 +77,13 @@ document.getElementById('addItem').addEventListener('submit', function (e) {
             fetchInventoryItems();
             form.reset();
             hideAddItemForm();
+            submitButton.disabled = false;  // Re-enable the submit button after success
         },
         error: function (xhr, status, error) {
             console.error('Upload error:', error);
             alert("Failed to add item.");
+            submitButton.disabled = false;  // Re-enable the submit button if there's an error
         }
     });
 });
+

@@ -34,7 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("sss", $name, $email, $hashedPassword);
 
     if ($stmt->execute()) {
-        echo json_encode(["status" => "success", "message" => "Registration successful."]);
+        header("Location: ../login.php");
+        exit;
     } else {
         echo json_encode(["status" => "error", "message" => "Something went wrong."]);
     }

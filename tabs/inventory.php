@@ -14,7 +14,7 @@
 
   <div class="header-bar">
     <div class="header-left">
-      <div class="header-title">AnalyticsBot</div>
+      <div class="header-title">Inventory</div>
       <div class="header-search">
         <input type="text" placeholder="Search..." />
         <i class="fas fa-search"></i>
@@ -35,6 +35,7 @@
   <!-- Inventory Section -->
   <div class="inventory-container">
     <button class="add-btn" onclick="showAddItemForm()">+ Add Item</button>
+    <div class="inventory-table-container">
     <table class="inventory-table">
       <thead>
         <tr>
@@ -46,11 +47,12 @@
         <!-- Inventory items will be dynamically inserted here -->
       </tbody>
     </table>
+    </div>
   </div>
 
   <!-- Add Item Modal -->
   <div class="add-item-form" id="addItemForm">
-    <form id="addItem" method="POST" action="upload.php" enctype="multipart/form-data">
+    <form id="addItem" method="POST" action="php/upload.php" enctype="multipart/form-data">
       <label for="name">Item Name:</label>
       <input type="text" name="name" required>
 

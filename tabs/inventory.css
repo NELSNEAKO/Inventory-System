@@ -78,24 +78,36 @@
   color: white;
 }
 
+.inventory-table-container {
+  width: 600px;
+  margin-top: 20px;
+  overflow-y: auto;
+  max-height: 650px;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+.inventory-table-container::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
 .inventory-table {
   width: 100%;
+  gap: 2px;
   border-collapse: collapse;
   font-family: 'Segoe UI', sans-serif;
-  background-color: white;
+  background-color: inherit;
 }
 
 .inventory-table thead {
-  background-color: #f9f9f9;
+  background-color: inherit;
   text-align: left;
 }
 
-.inventory-table th {
+.inventory-table th, .inventory-table td {
+  background-color: transparent; /* Fully transparent cells */
   padding: 16px;
-  font-weight: 600;
   font-size: 14px;
   color: black;
-  border-bottom: 1px solid #eaeaea;
 }
 
 .inventory-row td {
@@ -153,11 +165,11 @@
   width: 40%; /* Adjust width as necessary */
 }
 
-tbody {
-  overflow-y: auto;
-  max-height: 500px;
-}
 
 th {
   color: black;
+}
+
+#addItemForm:active{
+  display: none;
 }

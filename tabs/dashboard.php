@@ -9,7 +9,7 @@
           <!-- Add inside .main-div -->
           <div class="header-bar">
             <div class="header-left">
-              <div class="header-title">AnalyticsBot</div>
+              <div class="header-title">Dashboard</div>
               <div class="header-search">
                 <input type="text" placeholder="Search..." />
                 <i class="fas fa-search"></i>
