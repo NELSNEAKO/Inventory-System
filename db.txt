@@ -9,40 +9,49 @@ CREATE TABLE users (
     email VARCHAR(255) NOT NULL UNIQUE,        -- User email
     password VARCHAR(255) NOT NULL,            -- User password (hashed)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_email (email)                    -- Index for faster email lookups
 );
-INSERT INTO users (name, email, password)
-VALUES ('Admin', 'admin@gmail.com', 'admin');
 
 
--- Example inventory table
+-- Create the inventory table with user ownership
 CREATE TABLE IF NOT EXISTS inventory (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,                      -- Foreign key to users table
     name VARCHAR(255) NOT NULL,
     quantity INT NOT NULL,
-    image VARCHAR(255) NOT NULL -- URL to item image
+    image VARCHAR(255) NOT NULL,               -- URL to item image
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,  -- If user is deleted, their items are deleted
+    INDEX idx_user_id (user_id),               -- Index for faster user-based queries
+    INDEX idx_name (name)                      -- Index for faster name searches
 );
 
-
-
--- Create the sale table
+-- Create the sale table with user ownership
 CREATE TABLE IF NOT EXISTS sale (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,                      -- Foreign key to users table
     item VARCHAR(255) NOT NULL,
     date DATE NOT NULL,
     time TIME NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
-    qty INT NOT NULL
+    qty INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,  -- If user is deleted, their sales are deleted
+    INDEX idx_user_date (user_id, date),       -- Composite index for user's sales by date
+    INDEX idx_item (item)                      -- Index for faster item searches
 );
 
-INSERT INTO sale (item, date, time, price, qty) VALUES
-('Milk Tea',     CURDATE(), '10:00:00', 45.00, 10),
-('Milk Tea',     CURDATE(), '11:00:00', 45.00, 5),
-('Coffee',       CURDATE(), '12:00:00', 50.00, 8),
-('Fries',        CURDATE(), '14:00:00', 30.00, 12),
-('Hotdog',       CURDATE(), '16:00:00', 25.00, 6),
-('Coffee',       DATE_SUB(CURDATE(), INTERVAL 1 DAY), '10:00:00', 50.00, 6),
-('Fries',        DATE_SUB(CURDATE(), INTERVAL 1 DAY), '14:00:00', 30.00, 10),
-('Milk Tea',     DATE_SUB(CURDATE(), INTERVAL 2 DAY), '09:00:00', 45.00, 4),
-('Hotdog',       DATE_SUB(CURDATE(), INTERVAL 3 DAY), '13:00:00', 25.00, 7),
-('Fries',        DATE_SUB(CURDATE(), INTERVAL 6 DAY), '15:00:00', 30.00, 9);
+-- Insert sample sales data for admin user (user_id = 1)
+INSERT INTO sale (user_id, item, date, time, price, qty) VALUES
+(1, 'Milk Tea',     CURDATE(), '10:00:00', 45.00, 10),
+(1, 'Milk Tea',     CURDATE(), '11:00:00', 45.00, 5),
+(1, 'Coffee',       CURDATE(), '12:00:00', 50.00, 8),
+(1, 'Fries',        CURDATE(), '14:00:00', 30.00, 12),
+(1, 'Hotdog',       CURDATE(), '16:00:00', 25.00, 6),
+(1, 'Coffee',       DATE_SUB(CURDATE(), INTERVAL 1 DAY), '10:00:00', 50.00, 6),
+(1, 'Fries',        DATE_SUB(CURDATE(), INTERVAL 1 DAY), '14:00:00', 30.00, 10),
+(1, 'Milk Tea',     DATE_SUB(CURDATE(), INTERVAL 2 DAY), '09:00:00', 45.00, 4),
+(1, 'Hotdog',       DATE_SUB(CURDATE(), INTERVAL 3 DAY), '13:00:00', 25.00, 7),
+(1, 'Fries',        DATE_SUB(CURDATE(), INTERVAL 6 DAY), '15:00:00', 30.00, 9);

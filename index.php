@@ -32,7 +32,7 @@ if (!isset($_SESSION['user_id'])) {
       <nav class="sidebar">
         <h1>LOGO</h1>
         <ul>
-          <h3>NAVIGATION CENTER</h3>
+          <h3>NAVIGATION CENTER TEST</h3>
           <li class="tab-btn active" data-tab="dashboard">
             <i class="fas fa-tachometer-alt"></i> Dashboard
           </li>

@@ -1,38 +1,46 @@
 <?php
-// Database configuration
-$host = '127.0.0.1'; // Database host
-$username = 'root';   // Database username
-$password = '';       // Database password
-$database = 'inventory'; // Database name
+header('Content-Type: application/json');
 
-// Create a connection to the database
-$conn = new mysqli($host, $username, $password, $database);
+// Start session to get user ID
+session_start();
 
-// Check if the connection was successful
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['error' => 'User not logged in']);
+    exit;
 }
 
-// Query to fetch inventory items
-$sql = "SELECT * FROM inventory";
-$result = $conn->query($sql);
+$user_id = $_SESSION['user_id'];
 
-// Check if there are any results
-if ($result->num_rows > 0) {
-    // Create an array to store the items
-    $items = [];
+// Database connection
+$conn = new mysqli('localhost', 'root', '', 'inventory');
+
+if ($conn->connect_error) {
+    die(json_encode(['error' => 'Connection failed: ' . $conn->connect_error]));
+}
+
+// If ID is provided, fetch specific item
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+    $stmt = $conn->prepare("SELECT * FROM inventory WHERE id = ? AND user_id = ?");
+    $stmt->bind_param("ii", $id, $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $item = $result->fetch_assoc();
+    echo json_encode($item);
+} else {
+    // Fetch all items for the current user
+    $stmt = $conn->prepare("SELECT * FROM inventory WHERE user_id = ? ORDER BY created_at DESC");
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
     
-    // Fetch the data and add it to the items array
+    $items = [];
     while ($row = $result->fetch_assoc()) {
         $items[] = $row;
     }
-    
-    // Output the items as a JSON response
     echo json_encode($items);
-} else {
-    echo json_encode([]); // Return an empty array if no items are found
 }
 
-// Close the database connection
 $conn->close();
 ?>
