@@ -19,22 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           });
           break;
-
-        case "analytics":
-          loadScript("js/analytics.js", () => {
-            if (typeof loadAnalyticsData === "function") {
-              loadAnalyticsData();
-            }
-          });
-          break;
-
-        case "inventory":
-          loadScript("js/inventory.js", () => {
-            // Call fetchInventoryItems when inventory tab is loaded
-            fetchInventoryItems();
-          });
-          break;
-
+          case "inventory":
+            loadScript("js/inventory.js", () => {
+              (async () => {
+                 fetchInventoryItems();
+              })();
+            });
+            break;
+          
         case "users":
           loadScript("js/users.js");
           break;
@@ -56,16 +48,18 @@ document.addEventListener('DOMContentLoaded', () => {
   function loadScript(src, onload) {
     const existing = document.querySelector(`script[src="${src}"]`);
     if (existing) {
+      // ✅ Even if script exists, still call the onload callback
       onload?.();
       return;
     }
-
+  
     const script = document.createElement("script");
     script.src = src;
     script.onload = onload;
     script.onerror = () => console.error(`Failed to load script: ${src}`);
     document.body.appendChild(script);
   }
+  
 
   // Handle tab button click
   tabButtons.forEach(btn => {

@@ -1,5 +1,8 @@
 <?php
 session_start();
+header('Content-Type: application/json');
+include('connection.php');
+
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -8,16 +11,11 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Database connection
-$conn = new mysqli('localhost', 'root', '', 'inventory');
-
-if ($conn->connect_error) {
-    die(json_encode(['error' => 'Connection failed: ' . $conn->connect_error]));
-}
 
 // Handle file upload
-if (isset($_FILES['image'])) {
-    $target_dir = "../uploads/";  // Changed to relative path
+$image_url = null;
+if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
+    $target_dir = "../uploads/";
     if (!file_exists($target_dir)) {
         mkdir($target_dir, 0777, true);
     }
@@ -25,43 +23,59 @@ if (isset($_FILES['image'])) {
     $file_extension = strtolower(pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION));
     $new_filename = uniqid() . '.' . $file_extension;
     $target_file = $target_dir . $new_filename;
-    $image_url = "uploads/" . $new_filename;  // URL for database storage
+    $image_url = "uploads/" . $new_filename;
 
-    // Check if image file is a actual image or fake image
     $check = getimagesize($_FILES["image"]["tmp_name"]);
-    if($check === false) {
+    if ($check === false) {
         die(json_encode(['error' => 'File is not an image.']));
     }
 
-    // Check file size (5MB max)
     if ($_FILES["image"]["size"] > 5000000) {
         die(json_encode(['error' => 'File is too large.']));
     }
 
-    // Allow certain file formats
-    if($file_extension != "jpg" && $file_extension != "png" && $file_extension != "jpeg" && $file_extension != "gif" ) {
+    if (!in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])) {
         die(json_encode(['error' => 'Only JPG, JPEG, PNG & GIF files are allowed.']));
     }
 
-    if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-        // Insert into database
-        $name = $_POST['name'];
-        $quantity = $_POST['quantity'];
-
-        $stmt = $conn->prepare("INSERT INTO inventory (user_id, name, quantity, image) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("isis", $user_id, $name, $quantity, $image_url);
-
-        if ($stmt->execute()) {
-            echo json_encode(['success' => true, 'message' => 'Item added successfully']);
-        } else {
-            echo json_encode(['error' => 'Error adding item: ' . $stmt->error]);
-        }
-        $stmt->close();
-    } else {
-        echo json_encode(['error' => 'Error uploading file.']);
+    if (!move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+        die(json_encode(['error' => 'Error uploading file.']));
     }
+}
+
+$name = $_POST['name'];
+$quantity = $_POST['quantity'];
+$id = isset($_POST['id']) ? intval($_POST['id']) : null;
+
+// If ID is provided, do an update
+if ($id) {
+    // Optional: Check if the item belongs to the user before updating
+    if ($image_url) {
+        $stmt = $conn->prepare("UPDATE inventory SET name = ?, quantity = ?, image = ? WHERE id = ? AND user_id = ?");
+        $stmt->bind_param("sisii", $name, $quantity, $image_url, $id, $user_id);
+    } else {
+        $stmt = $conn->prepare("UPDATE inventory SET name = ?, quantity = ? WHERE id = ? AND user_id = ?");
+        $stmt->bind_param("siii", $name, $quantity, $id, $user_id);
+    }
+
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Item updated successfully']);
+    } else {
+        echo json_encode(['error' => 'Error updating item: ' . $stmt->error]);
+    }
+    $stmt->close();
+
 } else {
-    echo json_encode(['error' => 'No file uploaded.']);
+    // Insert new item
+    $stmt = $conn->prepare("INSERT INTO inventory (user_id, name, quantity, image) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("isis", $user_id, $name, $quantity, $image_url);
+
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Item added successfully']);
+    } else {
+        echo json_encode(['error' => 'Error adding item: ' . $stmt->error]);
+    }
+    $stmt->close();
 }
 
 $conn->close();

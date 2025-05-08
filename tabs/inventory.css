@@ -8,7 +8,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  min-height: 600px;
+  min-height: 550px;
   height: 100%;
   overflow: hidden;
 }
@@ -168,7 +168,7 @@
 
 .inventory-table-container {
   flex: 1;
-  max-height: 600px;
+  max-height: 500px;
   overflow-y: auto;
   min-height: 0;
   border-radius: 8px;

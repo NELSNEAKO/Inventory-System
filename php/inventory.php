@@ -1,5 +1,7 @@
 <?php
 header('Content-Type: application/json');
+include('connection.php');
+
 
 // Start session to get user ID
 session_start();
@@ -12,12 +14,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Database connection
-$conn = new mysqli('localhost', 'root', '', 'inventory');
-
-if ($conn->connect_error) {
-    die(json_encode(['error' => 'Connection failed: ' . $conn->connect_error]));
-}
 
 // If ID is provided, fetch specific item
 if (isset($_GET['id'])) {

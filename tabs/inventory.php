@@ -12,7 +12,7 @@
 
 <div class="tab-content active" id="inventory">
 
-  <div class="header-bar">
+  <!-- <div class="header-bar">
     <div class="header-left">
       <div class="header-title">Inventory</div>
       <div class="header-search">
@@ -30,7 +30,7 @@
     <div class="header-profile">
       <img src="https://i.pravatar.cc/40?img=1" alt="Profile" />
     </div>
-  </div>
+  </div> -->
 
   <!-- Inventory Section -->
   <div class="inventory-container">
@@ -58,7 +58,9 @@
 
       <!-- Right Column: Add Item Form -->
       <div class="add-item-form" id="addItemForm">
-        <form id="addItem" method="POST" action="php/upload.php" enctype="multipart/form-data">
+        <!-- <form id="addItem" method="POST" action="php/upload.php" enctype="multipart/form-data"> -->
+        <form id="addItem" method="POST" enctype="multipart/form-data">
+
           <div class="form-header">
             <h3>Add New Item</h3>
             <button type="button" class="close-btn" onclick="hideAddItemForm()">&times;</button>

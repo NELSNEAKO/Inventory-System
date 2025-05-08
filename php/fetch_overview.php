@@ -1,13 +1,6 @@
 <?php
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$database = "inventory";
+include('connection.php');
 
-$conn = new mysqli($servername, $username, $password, $database);
-if ($conn->connect_error) {
-    die(json_encode(["error" => "Connection failed."]));
-}
 
 function getRange($weekAgo = 0) {
     $start = new DateTime("last Sunday -$weekAgo week");

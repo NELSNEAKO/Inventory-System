@@ -1,5 +1,7 @@
 <?php
 session_start();
+include('connection.php');
+
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -8,12 +10,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Database connection
-$conn = new mysqli('localhost', 'root', '', 'inventory');
-
-if ($conn->connect_error) {
-    die(json_encode(['error' => 'Connection failed: ' . $conn->connect_error]));
-}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $id = $_POST['id'];
@@ -21,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $quantity = $_POST['quantity'];
 
     // First verify that the item belongs to the user
-    $check_stmt = $conn->prepare("SELECT id FROM inventory WHERE id = ? AND user_id = ?");
+    $check_stmt = $conn->prepare("SELECT id, image FROM inventory WHERE id = ? AND user_id = ?");
     $check_stmt->bind_param("ii", $id, $user_id);
     $check_stmt->execute();
     $result = $check_stmt->get_result();
@@ -29,6 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($result->num_rows === 0) {
         die(json_encode(['error' => 'Item not found or unauthorized']));
     }
+    $item = $result->fetch_assoc();
     $check_stmt->close();
 
     // Handle image upload if a new image is provided
@@ -43,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $target_file = $target_dir . $new_filename;
         $image_url = "uploads/" . $new_filename;  // URL for database storage
 
-        // Check if image file is a actual image
+        // Check if image file is an actual image
         $check = getimagesize($_FILES["image"]["tmp_name"]);
         if($check === false) {
             die(json_encode(['error' => 'File is not an image.']));
@@ -60,26 +57,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-            // Get old image path to delete it
-            $stmt = $conn->prepare("SELECT image FROM inventory WHERE id = ? AND user_id = ?");
-            $stmt->bind_param("ii", $id, $user_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $old_image = $result->fetch_assoc()['image'];
-            
-            // Delete old image if it exists
-            if (file_exists("../" . $old_image)) {
-                unlink("../" . $old_image);
-            }
-
-            // Update with new image
+            // Update the database with the new image without deleting the old image file
             $stmt = $conn->prepare("UPDATE inventory SET name = ?, quantity = ?, image = ? WHERE id = ? AND user_id = ?");
             $stmt->bind_param("sissi", $name, $quantity, $image_url, $id, $user_id);
         } else {
             die(json_encode(['error' => 'Error uploading new image.']));
         }
     } else {
-        // Update without changing image
+        // If no image is uploaded, only update the name and quantity
         $stmt = $conn->prepare("UPDATE inventory SET name = ?, quantity = ? WHERE id = ? AND user_id = ?");
         $stmt->bind_param("siii", $name, $quantity, $id, $user_id);
     }
@@ -95,4 +80,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 
 $conn->close();
-?> 
+?>

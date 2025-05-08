@@ -108,46 +108,51 @@ function displayInventoryItems(items) {
 }
 
 // Handle form submission with optimized image processing
-async function handleFormSubmit(e) {
-    e.preventDefault();
-    
-    const form = e.target;
-    const formData = new FormData(form);
-    const submitButton = form.querySelector('button[type="submit"]');
-    const isUpdate = form.querySelector('input[name="id"]') !== null;
-    
-    try {
-        submitButton.disabled = true;
-        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+// ✅ This is your form handler function
+$(document).ready(function() {
+    $('#addItem').on('submit', function(e) {
+        e.preventDefault(); // Prevent the default form submission
+        
+        const form = $(this);
+        const formData = new FormData(this);  // Use FormData to handle form data including the file input
 
-        // Process image if present
-        const imageFile = formData.get('image');
-        if (imageFile && imageFile.size > 0) {
-            await optimizeImage(imageFile, formData);
-        }
+        // Disable the submit button and show a loading state
+        const submitButton = form.find('button[type="submit"]');
+        submitButton.prop('disabled', true);
+        submitButton.html('<i class="fas fa-spinner fa-spin"></i> Processing...');
 
-        const response = await $.ajax({
-            url: isUpdate ? 'php/update.php' : 'php/upload.php',
+        // Use $.ajax() to submit the form data via POST
+        $.ajax({
+            url: 'php/upload.php', // PHP file that will handle the upload
             type: 'POST',
             data: formData,
-            contentType: false,
-            processData: false
+            processData: false, // Don't process the data as a query string
+            contentType: false, // Let jQuery set the content type
+            success: function(response) {
+                if (response.success) {
+                    // Show success message and reset the form
+                    alert(response.message); // Example: Show an alert with the success message
+                    fetchInventoryItems(); // Refresh the inventory list
+                    resetForm();
+                } else {
+                    // Show error message
+                    alert('Error: ' + response.error);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error submitting form:', error);
+                alert('There was an error with the form submission.');
+            },
+            complete: function() {
+                // Re-enable the submit button after the request is complete
+                submitButton.prop('disabled', false);
+                submitButton.html('Add Item');
+            }
         });
+    });
+});
 
-        if (response.error) {
-            throw new Error(response.error);
-        }
 
-        await fetchInventoryItems(); // Refresh the inventory list
-        resetForm();
-        
-    } catch (error) {
-        console.error('Form submission error:', error);
-    } finally {
-        submitButton.disabled = false;
-        submitButton.innerHTML = isUpdate ? 'Update Item' : 'Add Item';
-    }
-}
 
 // Optimize image before upload
 async function optimizeImage(imageFile, formData) {
@@ -200,7 +205,7 @@ function resetForm() {
     addItemForm.reset();
     imagePreview.style.display = 'none';
     imagePreview.src = '#';
-    hideAddItemForm();
+    // hideAddItemForm(); optional if you want to hide or not
 }
 
 // Show notification with better styling

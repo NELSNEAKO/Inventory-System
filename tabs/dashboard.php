@@ -6,8 +6,7 @@
   </head>
   <body>
     <div class="tab-content active" id="dashboard">
-          <!-- Add inside .main-div -->
-          <div class="header-bar">
+          <!-- <div class="header-bar">
             <div class="header-left">
               <div class="header-title">Dashboard</div>
               <div class="header-search">
@@ -25,7 +24,7 @@
             <div class="header-profile">
               <img src="https://i.pravatar.cc/40?img=1" alt="Profile" />
             </div>
-          </div>
+          </div> -->
 
           <!-- Other dashboard content goes here -->
 
