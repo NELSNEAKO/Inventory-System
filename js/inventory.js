@@ -1,8 +1,18 @@
 // Cache DOM elements
 const inventoryTableBody = $('#inventoryTableBody');
-const searchInput = document.querySelector('.header-search input');
 const addItemForm = document.getElementById('addItem');
 const imagePreview = document.getElementById('imagePreview');
+
+// Initialize inventory
+function initializeInventory() {
+    fetchInventoryItems();
+}
+
+// Call initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializeInventory);
+
+// Make initializeInventory available globally
+window.initializeInventory = initializeInventory;
 
 // Fetch inventory items when the page loads
 function fetchInventoryItems() {
@@ -21,53 +31,6 @@ function fetchInventoryItems() {
     });
 }
 
-// Function to search inventory items with debounce
-let searchTimeout;
-function searchInventory(query) {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-        if (!window.inventoryData) return;
-
-        const searchTerm = query.toLowerCase().trim();
-        const filteredItems = window.inventoryData.filter(item => {
-            return item.name.toLowerCase().includes(searchTerm) ||
-                   item.quantity.toString().includes(searchTerm);
-        });
-
-        displayInventoryItems(filteredItems);
-        
-        if (filteredItems.length === 0 && searchTerm !== '') {
-            inventoryTableBody.append(`
-                <tr class="no-results">
-                    <td colspan="3" style="text-align: center; padding: 20px;">
-                        No items found matching "${query}"
-                    </td>
-                </tr>
-            `);
-        }
-    }, 300); // 300ms debounce
-}
-
-// Add event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    if (searchInput) {
-        searchInput.addEventListener('input', function(e) {
-            searchInventory(e.target.value);
-        });
-        
-        searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                this.value = '';
-                searchInventory('');
-            }
-        });
-    }
-
-    // Form submission with optimized image handling
-    if (addItemForm) {
-        addItemForm.addEventListener('submit', handleFormSubmit);
-    }
-});
 
 // Display inventory items with optimized rendering
 function displayInventoryItems(items) {
@@ -209,27 +172,7 @@ function resetForm() {
 }
 
 // Show notification with better styling
-function showNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-            <span>${message}</span>
-        </div>
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Trigger animation
-    setTimeout(() => notification.classList.add('show'), 10);
-    
-    // Remove notification after 3 seconds
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
+
 
 // Show the form to add a new item
 function showAddItemForm() {

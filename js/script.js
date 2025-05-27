@@ -19,22 +19,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           });
           break;
-          case "inventory":
-            loadScript("js/inventory.js", () => {
-              (async () => {
-                 fetchInventoryItems();
-              })();
-            });
-            break;
-          
-        case "users":
-          loadScript("js/users.js");
+        case "inventory":
+          loadScript("js/inventory.js", () => {
+            if (typeof initializeInventory === "function") {
+              initializeInventory();
+            }
+          });
           break;
-
         case "settings":
           loadScript("js/settings.js");
           break;
-
         // Add other tabs here...
       }
 
@@ -48,9 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function loadScript(src, onload) {
     const existing = document.querySelector(`script[src="${src}"]`);
     if (existing) {
-      // ✅ Even if script exists, still call the onload callback
-      onload?.();
-      return;
+      // Remove existing script
+      existing.remove();
     }
   
     const script = document.createElement("script");
@@ -75,4 +68,35 @@ document.addEventListener('DOMContentLoaded', () => {
   // Load default tab on page load
   const defaultTab = document.querySelector('.tab-btn.active')?.getAttribute('data-tab') || "dashboard";
   loadTab(defaultTab);
+
+  // Add settings tab handling
+  document.querySelector('[data-tab="settings"]').addEventListener('click', function() {
+    loadTabContent('settings');
+  });
+
+  // Update loadTabContent function to include settings
+  function loadTabContent(tabName) {
+    const container = document.getElementById('tab-content-container');
+    
+    // Clear existing content
+    container.innerHTML = '';
+    
+    // Load the appropriate content
+    fetch(`tabs/${tabName}.php`)
+        .then(response => response.text())
+        .then(html => {
+            container.innerHTML = html;
+            
+            // Load additional scripts based on the tab
+            if (tabName === 'settings') {
+                const script = document.createElement('script');
+                script.src = 'js/settings.js';
+                document.body.appendChild(script);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading tab content:', error);
+            container.innerHTML = '<p>Error loading content. Please try again.</p>';
+        });
+  }
 });

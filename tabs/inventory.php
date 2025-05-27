@@ -7,30 +7,11 @@
   <link rel="stylesheet" href="tabs/inventory.css" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="../js/inventory.js"></script>
 </head>
 <body>
 
 <div class="tab-content active" id="inventory">
-
-  <!-- <div class="header-bar">
-    <div class="header-left">
-      <div class="header-title">Inventory</div>
-      <div class="header-search">
-        <input type="text" placeholder="Search..." />
-        <i class="fas fa-search"></i>
-      </div>
-    </div>
-
-    <div class="header-icons">
-      <i class="fas fa-bell"></i>
-      <i class="fas fa-envelope"></i>
-      <i class="fas fa-cog"></i>
-    </div>
-
-    <div class="header-profile">
-      <img src="https://i.pravatar.cc/40?img=1" alt="Profile" />
-    </div>
-  </div> -->
 
   <!-- Inventory Section -->
   <div class="inventory-container">
@@ -47,6 +28,7 @@
               <tr>
                 <th class="product-col">Product</th>
                 <th class="quantity-col">Inventory</th>
+                <th class="actions-col">Actions</th>
               </tr>
             </thead>
             <tbody id="inventoryTableBody">
@@ -87,10 +69,6 @@
   </div>
 
 </div>
-
-<script src="../script.js">
-  console.log("✅ inventory.php loaded into DOM");
-</script>
 
 </body>
 </html>

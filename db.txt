@@ -43,6 +43,21 @@ CREATE TABLE IF NOT EXISTS sale (
     INDEX idx_item (item)                      -- Index for faster item searches
 );
 
+-- Create notification settings table
+CREATE TABLE IF NOT EXISTS notification_settings (
+    user_id INT PRIMARY KEY,
+    low_stock BOOLEAN DEFAULT true,
+    sales_report BOOLEAN DEFAULT true,
+    inventory_updates BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Insert default notification settings for existing users
+INSERT IGNORE INTO notification_settings (user_id)
+SELECT id FROM users;
+
 -- Insert sample sales data for admin user (user_id = 1)
 INSERT INTO sale (user_id, item, date, time, price, qty) VALUES
 (1, 'Milk Tea',     CURDATE(), '10:00:00', 45.00, 10),

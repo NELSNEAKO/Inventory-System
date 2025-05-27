@@ -30,9 +30,12 @@ if (!isset($_SESSION['user_id'])) {
     <div class="container">
       <!-- SIDEBAR -->
       <nav class="sidebar">
-        <h1>LOGO</h1>
+        <div class="logo" id="tcc-logo">
+          <img src="images/TCC.png" alt="Logo" width="100px" height="100px"/>
+        </div>
         <ul>
-          <h3>NAVIGATION CENTER TEST</h3>
+          <br>
+          <!-- <h3>NAVIGATION CENTER TEST</h3> -->
           <li class="tab-btn active" data-tab="dashboard">
             <i class="fas fa-tachometer-alt"></i> Dashboard
           </li>
