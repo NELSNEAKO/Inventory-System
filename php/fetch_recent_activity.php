@@ -9,29 +9,44 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Get recent activities (last 10 changes)
+$activities = [];
+
+// Get recent activities (additions and updates)
 $stmt = $conn->prepare("
-    SELECT 
-        'update' as type,
-        CONCAT('Updated quantity of ', name, ' to ', quantity) as description,
-        created_at as time
+    (SELECT 
+        'add' as type,
+        CONCAT('Added new item: ', name) as description,
+        created_at as time,
+        created_at as order_time
     FROM inventory 
     WHERE user_id = ? 
-    AND updated_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
-    ORDER BY updated_at DESC
+    AND created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY))
+    
+    UNION ALL
+    
+    (SELECT 
+        'update' as type,
+        CONCAT('Updated quantity of ', name, ' to ', quantity) as description,
+        updated_at as time,
+        updated_at as order_time
+    FROM inventory 
+    WHERE user_id = ? 
+    AND updated_at >= DATE_SUB(NOW(), INTERVAL 7 DAY))
+    
+    ORDER BY order_time DESC
     LIMIT 10
 ");
-$stmt->bind_param("i", $user_id);
+
+$stmt->bind_param("ii", $user_id, $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-$activities = [];
 while ($row = $result->fetch_assoc()) {
     $row['time'] = date('M j, g:i a', strtotime($row['time']));
     $activities[] = $row;
 }
 
-// If no recent updates, get low stock items
+// If still no recent activities, get low stock items as a fallback
 if (empty($activities)) {
     $stmt = $conn->prepare("
         SELECT 
