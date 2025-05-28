@@ -3,104 +3,135 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="tabs/dashboard.css">
   </head>
   <body>
     <div class="tab-content active" id="dashboard">
-          <!-- <div class="header-bar">
-            <div class="header-left">
-              <div class="header-title">Dashboard</div>
-              <div class="header-search">
-                <input type="text" placeholder="Search..." />
-                <i class="fas fa-search"></i>
+      <div class="main-content">
+        <!-- Container 1: Overview -->
+        <div class="dashboard-container">
+          <h2>Inventory Overview</h2>
+          <div class="overview-cards">
+            <div class="card" id="total-items-card">
+              <i class="fas fa-boxes"></i>
+              <div>
+                <h4>Total Items</h4>
+                <p><span id="total-items">0</span> unique items</p>
               </div>
             </div>
-
-            <div class="header-icons">
-              <i class="fas fa-bell"></i>
-              <i class="fas fa-envelope"></i>
-              <i class="fas fa-cog"></i>
-            </div>
-
-            <div class="header-profile">
-              <img src="https://i.pravatar.cc/40?img=1" alt="Profile" />
-            </div>
-          </div> -->
-
-          <!-- Other dashboard content goes here -->
-
-          <div class="main-content">
-            <!-- Container 1: Overview -->
-            <div class="dashboard-container">
-              <h2>Overview</h2>
-              <div class="overview-cards">
-                <div class="card" id="revenue-card">
-                  <i class="fas fa-dollar-sign"></i>
-                  <div>
-                    <h4>Total Revenue</h4>
-                    <p>This Week: ₱<span id="revenue-week">0</span></p>
-                    <p>Last Week: ₱<span id="revenue-last">0</span></p>
-                  </div>
-                </div>
-                <div class="card" id="profit-card">
-                  <i class="fas fa-coins"></i>
-                  <div>
-                    <h4>Net Profit</h4>
-                    <p>This Week: ₱<span id="profit-week">0</span></p>
-                    <p>Last Week: ₱<span id="profit-last">0</span></p>
-                  </div>
-                </div>
-                <div class="card" id="sold-card">
-                  <i class="fas fa-shopping-cart"></i>
-                  <div>
-                    <h4>Items Sold</h4>
-                    <p>This Week: <span id="sold-week">0</span></p>
-                    <p>Last Week: <span id="sold-last">0</span></p>
-                  </div>
-                </div>
-                <div class="card" id="growth-card">
-                  <i class="fas fa-chart-line"></i>
-                  <div>
-                    <h4>Growth</h4>
-                    <p><span id="growth-percent">0%</span></p>
-                  </div>
-                </div>
+            <div class="card" id="total-quantity-card">
+              <i class="fas fa-layer-group"></i>
+              <div>
+                <h4>Total Quantity</h4>
+                <p><span id="total-quantity">0</span> units in stock</p>
               </div>
             </div>
-
-            <div class="dashboard-container">
-              <div class="attendace-report"> 
-                <h2>Attendance Report</h2>
-              </div>
-              <div class="label-wrapper">
-                <div class="weekday-labels">
-                  <div>S</div>
-                  <div>M</div>
-                  <div>T</div>
-                  <div>W</div>
-                  <div>T</div>
-                  <div>F</div>
-                  <div>S</div>
-                </div>
-              </div>
-              <div class="heatmap-wrapper">
-                <div class="heatmap" id="heatmap-grid"></div>
+            <div class="card" id="low-stock-card">
+              <i class="fas fa-exclamation-triangle"></i>
+              <div>
+                <h4>Low Stock Items</h4>
+                <p><span id="low-stock">0</span> items need attention</p>
               </div>
             </div>
-
-            <!-- Revenue Report -->
-            <div class="dashboard-container" id="revenue-report">
-              <h2>Revenue Report (Last 7 Days)</h2>
-              <canvas id="revenueChart" height="150"></canvas>
-            </div>
-
-            <!-- Top Selling Items -->
-            <div class="dashboard-container" id="top-items">
-              <h2>Most Popular Items</h2>
-              <div class="top-items-container" id="topItemsContainer"></div>
+            <div class="card" id="recent-items-card">
+              <i class="fas fa-clock"></i>
+              <div>
+                <h4>Recent Additions</h4>
+                <p><span id="recent-items">0</span> items this week</p>
+              </div>
             </div>
           </div>
+        </div>
+
+        <!-- Stock Distribution Chart -->
+        <div class="dashboard-container">
+          <h2>Stock Distribution</h2>
+          <canvas id="stockChart" height="200"></canvas>
+        </div>
+
+        <!-- Top Items -->
+        <section class="dashboard-section">
+          <h2 id="top-items-title">Top Items by Quantity</h2>
+          <div class="top-items-container" id="topItemsContainer">
+            <!-- Top items will be loaded here by JavaScript -->
+          </div>
+        </section>
+
+        <!-- Recent Activity -->
+        <div class="dashboard-container">
+          <h2>Recent Activity</h2>
+          <div class="activity-list" id="activityList">
+            <!-- Activity items will be dynamically inserted here -->
+          </div>
+        </div>
+      </div>
     </div>
-    <script src="../script.js">
+
+    <script>
+      function loadDashboardData() {
+        // Fetch inventory statistics
+        $.ajax({
+          url: "../php/fetch_inventory_stats.php",
+          method: "GET",
+          dataType: "json",
+          success: function(data) {
+            // Update overview cards
+            $("#total-items").text(data.total_items);
+            $("#total-quantity").text(data.total_quantity);
+            $("#low-stock").text(data.low_stock);
+            $("#recent-items").text(data.recent_items);
+
+            // Update top items
+            const container = $("#topItemsContainer");
+            container.empty();
+            data.top_items.forEach(item => {
+              const card = `
+                <div class="item-card">
+                  <div class="item-image">
+                    <img src="${item.image || '../images/default-item.png'}" alt="${item.name}">
+                  </div>
+                  <div class="item-info">
+                    <strong>${item.name}</strong>
+                    <p>Quantity: ${item.quantity}</p>
+                  </div>
+                </div>
+              `;
+              container.append(card);
+            });
+
+            // Create stock distribution chart
+            const ctx = document.getElementById('stockChart').getContext('2d');
+            new Chart(ctx, {
+              type: 'doughnut',
+              data: {
+                labels: ['In Stock', 'Low Stock'],
+                datasets: [{
+                  data: [data.total_items - data.low_stock, data.low_stock],
+                  backgroundColor: ['#4dd0e1', '#ff9800']
+                }]
+              },
+              options: {
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: 'bottom'
+                  }
+                }
+              }
+            });
+          },
+          error: function(err) {
+            console.error("Error loading dashboard data:", err);
+          }
+        });
+      }
+
+      // Load dashboard data when the page loads
+      $(document).ready(function() {
+        loadDashboardData();
+      });
     </script>
   </body>
 </html>
