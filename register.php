@@ -15,6 +15,22 @@ if (isset($_SESSION['user_id'])) {
     <link rel="stylesheet" href="login.css" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        .success-message i {
+            color: #28a745;
+        }
+    </style>
 </head>
 <body>
     <div class="auth-container">
@@ -32,6 +48,13 @@ if (isset($_SESSION['user_id'])) {
                     <div class="error-message">
                         <i class="fas fa-exclamation-circle"></i>
                         <?php echo htmlspecialchars($_GET['error']); ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($_GET['success'])): ?>
+                    <div class="success-message">
+                        <i class="fas fa-check-circle"></i>
+                        Registration completed successfully! You can now login.
                     </div>
                 <?php endif; ?>
 
