@@ -1,0 +1,260 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;700&display=swap');
+
+:root {
+  --primary-color: #667eea;
+  --primary-dark: #764ba2;
+  --text-dark: #2d3748;
+  --text-light: #718096;
+  --border-radius: 8px;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto Condensed', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background-image: url(../images/bg.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-dark);
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  padding: 1rem;
+}
+
+.form-container {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 2.5rem;
+}
+
+.form-container h2 {
+  text-align: center;
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  color: #4a5568;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-group label i {
+  color: var(--primary-color);
+}
+
+.form-group input {
+  background: rgba(255, 255, 255, 0.3);
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input:invalid {
+  border-color: #e53e3e;
+}
+
+.form-group input:invalid:focus {
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+}
+
+.form-group .validation-message {
+  font-size: 0.85rem;
+  color: #e53e3e;
+  margin-top: 0.25rem;
+}
+
+.btn-primary {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.875rem;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  transition: var(--transition);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+.form-footer a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+.form-footer a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.alert {
+  padding: 0.75rem;
+  margin-bottom: 1.25rem;
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.alert-danger {
+  background: #fff5f5;
+  color: #c53030;
+  border: 1px solid #feb2b2;
+}
+
+.alert-success {
+  background: #f0fff4;
+  color: #2f855a;
+  border: 1px solid #9ae6b4;
+}
+
+.alert i {
+  font-size: 1.1rem;
+}
+
+/* Password strength indicator */
+.password-strength {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-light);
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  width: 100%;
+  padding-right: 2.5rem; /* Make space for the icon */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a0aec0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  z-index: 1;
+  padding: 5px;
+}
+
+.toggle-password:hover {
+  color: var(--primary-color);
+}
+
+.password-strength.weak {
+  color: #e53e3e;
+}
+
+.password-strength.medium {
+  color: #dd6b20;
+}
+
+.password-strength.strong {
+  color: #38a169;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .form-container {
+    padding: 1.5rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .btn-primary {
+    padding: 0.75rem;
+  }
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.logo i {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  background: rgba(102, 126, 234, 0.1);
+  padding: 0.75rem;
+  border-radius: 12px;
+}
+
+.logo h1 {
+  font-size: 1.75rem;
+  color: var(--text-dark);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.welcome-text {
+  color: var(--text-light);
+  font-size: 1rem;
+  font-weight: 400;
+  margin-top: 0.5rem;
+}
